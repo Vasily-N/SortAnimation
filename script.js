@@ -40,8 +40,8 @@ const L_Y_INTERVAL = 4;
 const L_MULT = 20;
 
 //todo: from UI
-let animationTime = 000; //todo: get from style
-let waitTime = 000;
+let animationTime = 1000; //todo: get from style
+let waitTime = 1000;
 
 let _reportsI;
 let _reports;
@@ -94,7 +94,7 @@ const NextStep = () => {
     }
 
     ResetStyles();
-    if (_reportsI >= _reports.length) { 
+    if (_reportsI >= _reports.length) {
       return; 
     }
 
