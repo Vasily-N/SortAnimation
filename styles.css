@@ -1,0 +1,22 @@
+.block {
+  position: relative;
+  margin-top: 20px;
+  width: 800px;
+  height: 600px;
+}
+
+.row {
+  position: absolute;
+  background-color: pink;
+  height: 16px;
+  z-index: 1;
+}
+
+.zone {
+  background-color: red;
+}
+
+.active {
+  background-color: blue;
+  z-index: 2;
+}
