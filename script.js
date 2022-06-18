@@ -33,8 +33,7 @@ const L_Y_INTERVAL = 4;
 const L_MULT = 20;
 
 //todo: from UI
-let animationTime = 1500;
-let animationInterval = 10;
+let animationTime = 1000; //todo: get from style
 let waitTime = 1000;
 
 let _reportsI;
@@ -54,7 +53,6 @@ class Report {
 const BtnSort = () => {
   _reportsI = 0;
   _reports = [];
-  _rMove = undefined;
   _rZone = undefined;
   QuickSort(_arr, 0, _arr.length - 1);
   NextStep();
@@ -81,11 +79,7 @@ const Start = () => {
   _btnSort.addEventListener('click', BtnSort);
 }
 
-let _rMove;
 let _rZone;
-let _topI;
-let _topJ;
-
 const NextStep = () => {
     const ResetStyles = () => {
       _block.querySelectorAll('.zone').forEach(v => v.classList.remove('zone'));
@@ -112,25 +106,10 @@ const NextStep = () => {
 
     _arrDiv[r.I].classList.add('active');
     _arrDiv[r.J].classList.add('active');
-    _rMove = r;
-    _animFrame = 0;
-    _topI = GetPosition(r.I);
-    _topJ = GetPosition(r.J);
-    tAnimFrame = setInterval(animFrameTick, )
-}
-
-let tAnimFrame; 
-let _animFrame;
-const animFrameTick = () => {
-  _animFrame++;
-  const dif = (_topJ - _topI) * (_animFrame * animationInterval) / animationTime;
-  _arrDiv[_rMove.I].style.top = `${Math.min(_topI + dif, _topJ)}px`;
-  _arrDiv[_rMove.J].style.top = `${Math.max(_topJ - dif, _topI)}px`;
-
-  if (_animFrame * animationInterval < animationTime) return;
-  [_arrDiv[_rMove.I], _arrDiv[_rMove.J]] = [_arrDiv[_rMove.J], _arrDiv[_rMove.I]];
-  clearInterval(tAnimFrame);
-  setTimeout(NextStep, waitTime);
+    _arrDiv[r.I].style.top = `${GetPosition(r.J)}px`;
+    _arrDiv[r.J].style.top = `${GetPosition(r.I)}px`;
+    [_arrDiv[r.I], _arrDiv[r.J]] = [_arrDiv[r.J], _arrDiv[r.I]]
+    setTimeout(NextStep, animationTime + waitTime);
 }
 
 Start();

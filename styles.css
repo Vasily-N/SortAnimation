@@ -19,4 +19,6 @@
 .active {
   background-color: blue;
   z-index: 2;
+  transition-property: top;
+  transition-duration: 1s;
 }
