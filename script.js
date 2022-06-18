@@ -124,7 +124,6 @@ let _animFrame;
 const animFrameTick = () => {
   _animFrame++;
   const dif = (_topJ - _topI) * (_animFrame * animationInterval) / animationTime;
-  console.log(dif);
   _arrDiv[_rMove.I].style.top = `${Math.min(_topI + dif, _topJ)}px`;
   _arrDiv[_rMove.J].style.top = `${Math.max(_topJ - dif, _topI)}px`;
 
