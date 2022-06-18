@@ -5,8 +5,14 @@ const QuickSort = (a, left, right) => {
   _reports.push(new Report(i, j, ReportType.Zone));
 
   while (i <= j) {
-      while (a[i] < p) i++;
-      while (a[j] > p) j--;
+      while (a[i] < p) {
+        i++;
+        _reports.push(new Report(i, j, ReportType.Select));
+      }
+      while (a[j] > p) {
+        j--;
+        _reports.push(new Report(i, j, ReportType.Select));
+      }
       if (i > j) continue; 
       if (a[i] != a[j]) {
           [a[i], a[j]] = [a[j], a[i]];
@@ -15,6 +21,7 @@ const QuickSort = (a, left, right) => {
 
       i++;
       j--;
+      _reports.push(new Report(i, j, ReportType.Select));
   }
 
   if (j > left) QuickSort(a, left, j);
@@ -39,7 +46,7 @@ let waitTime = 1000;
 let _reportsI;
 let _reports;
 
-const ReportType = {Sort : 0, Zone: 1}; //enum?
+const ReportType = {Sort : 0, Zone: 1, Select: 2}; //enum?
 class Report {
   constructor(i, j, type = ReportType.Sort) {
     Object.assign(this, {_i: i, _j: j, _type: type});
@@ -104,8 +111,12 @@ const NextStep = () => {
       return;
     }
 
-    _arrDiv[r.I].classList.add('active');
-    _arrDiv[r.J].classList.add('active');
+    if(_arrDiv[r.I]) _arrDiv[r.I].classList.add('active');
+    if(_arrDiv[r.J]) _arrDiv[r.J].classList.add('active');
+    if(r.Type != ReportType.Sort) {
+      setTimeout(NextStep, waitTime / 10  );
+      return;
+    }
     _arrDiv[r.I].style.top = `${GetPosition(r.J)}px`;
     _arrDiv[r.J].style.top = `${GetPosition(r.I)}px`;
     [_arrDiv[r.I], _arrDiv[r.J]] = [_arrDiv[r.J], _arrDiv[r.I]]
