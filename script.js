@@ -67,7 +67,7 @@ const BtnSort = () => {
   NextStep();
 }
 
-const GetPosition = i => i * (L_HEIGHT + L_Y_INTERVAL);
+const GetTop = i => `${i * (L_HEIGHT + L_Y_INTERVAL)}px`;
 
 const Start = () => {
   _arr = [];
@@ -79,7 +79,7 @@ const Start = () => {
     const div = document.createElement('div');
     div.classList.add('row');
     div.innerHTML = val;
-    const style = { top: `${GetPosition(i)}px`, width: `${L_MULT * val}px`};
+    const style = { top: GetTop(i), width: `${L_MULT * val}px`};
     Object.assign(div.style, style);
     _arrDiv[i] = div;
     _block.appendChild(div);
@@ -120,9 +120,8 @@ const NextStep = () => {
     return;
   }
 
-  _arrDiv[r.I].style.top = `${GetPosition(r.J)}px`;
-  _arrDiv[r.J].style.top = `${GetPosition(r.I)}px`;
   [_arrDiv[r.I], _arrDiv[r.J]] = [_arrDiv[r.J], _arrDiv[r.I]];
+  [_arrDiv[r.I].style.top, _arrDiv[r.J].style.top] = [GetTop(r.I), GetTop(r.J)];
 
   setTimeout(NextStep, animationTime + waitTime);
 }
