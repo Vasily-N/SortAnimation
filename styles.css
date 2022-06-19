@@ -16,7 +16,11 @@
   background-color: red;
 }
 
-.active {
+.compare {
+  color: white;
+}
+
+.active, .compare.zone.active {
   background-color: blue;
   z-index: 2;
   transition-property: top;

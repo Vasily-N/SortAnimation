@@ -1,6 +1,7 @@
 const QuickSort = (a, left, right) => {
   let i = left, j = right;
   const p = a[left];
+  _reports.push(new Report(ReportType.Compare, left));
   _reports.push(new Report(ReportType.Zone, i, j));
 
   while (i <= j) {
@@ -49,7 +50,7 @@ let waitTime = 1000;
 let _reports;
 let _rZone;
 
-const ReportType = {Sort : 0, Zone: 1, Select: 2}; //enum?
+const ReportType = {Sort : 0, Zone: 1, Select: 2, Compare: 3 }; //enum?
 class Report {
   constructor(type, ...coords) {
     Object.assign(this, {_coords: coords, _type: type});
@@ -91,20 +92,31 @@ const removeZone = v => v.classList.remove('zone');
 const addZone = v => v.classList.add('zone');
 const removeActive = v => v.classList.remove('active');
 const addActive = v => v.classList.add('active');
+const removeComparator = v => v.classList.remove('compare');
+const addComparator = v => v.classList.add('compare');
 
 const NextStep = () => {
-  const RemoveActive = () => _block.querySelectorAll('.active').forEach(removeActive);
-  const RemoveZones = () => _block.querySelectorAll('.zone').forEach(removeZone);
+  const removeActives = () => _block.querySelectorAll('.active').forEach(removeActive);
+  const removeZones = () => _block.querySelectorAll('.zone').forEach(removeZone);
+  const removeComparators = () => _block.querySelectorAll('.compare').forEach(removeComparator);
 
-  RemoveActive();
+
+  removeActives();
   if (_reports.length == 0) {
-    RemoveZones();
+    removeZones();
     return; 
   }
 
   const r = _reports.shift();
+  if (r.Type == ReportType.Compare) {
+    removeComparators();
+    r.Coords.forEach(v => addComparator(_arrDiv[v]))
+    NextStep();
+    return;
+  }
+
   if (r.Type == ReportType.Zone) {
-    RemoveZones();
+    removeZones();
     _rZone = r;
     _rZone.Coords.forEach(v => addZone(_arrDiv[v]))
     setTimeout(NextStep, waitTime);
