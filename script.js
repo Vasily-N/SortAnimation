@@ -112,16 +112,17 @@ const NextStep = () => {
     return;
   }
 
-  if(_arrDiv[r.I]) _arrDiv[r.I].classList.add('active');
-  if(_arrDiv[r.J]) _arrDiv[r.J].classList.add('active');
+  const { I:i, J:j } = r;
+  _arrDiv[i].classList.add('active');
+  _arrDiv[j].classList.add('active');
 
   if(r.Type != ReportType.Sort) {
     setTimeout(NextStep, waitTime / 10);
     return;
   }
 
-  [_arrDiv[r.I], _arrDiv[r.J]] = [_arrDiv[r.J], _arrDiv[r.I]];
-  [_arrDiv[r.I].style.top, _arrDiv[r.J].style.top] = [GetTop(r.I), GetTop(r.J)];
+  [_arrDiv[i], _arrDiv[j]] = [_arrDiv[j], _arrDiv[i]];
+  [_arrDiv[i].style.top, _arrDiv[j].style.top] = [GetTop(i), GetTop(j)];
 
   setTimeout(NextStep, animationTime + waitTime);
 }
