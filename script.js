@@ -1,25 +1,25 @@
 const QuickSort = (a, left, right) => {
   let i = left, j = right;
   const p = a[left];
-  _reports.push(new Report(i, j, ReportType.Zone));
+  _reports.push(new Report(ReportType.Zone, i, j));
 
   while (i <= j) {
-    _reports.push(new Report(i, j, ReportType.Select));
+    _reports.push(new Report(ReportType.Select, i, j));
 
     while (a[i] < p) {
       i++;
-      _reports.push(new Report(i, j, ReportType.Select));
+      _reports.push(new Report(ReportType.Select, i, j));
     }
 
     while (a[j] > p) {
       j--;
-      _reports.push(new Report(i, j, ReportType.Select));
+      _reports.push(new Report(ReportType.Select, i, j));
     }
 
     if (i > j) break;
     if (a[i] != a[j]) {
       [a[i], a[j]] = [a[j], a[i]];
-      _reports.push(new Report(i, j, ReportType.Sort));
+      _reports.push(new Report(ReportType.Sort, i, j));
     }
 
     i++; j--;
@@ -51,12 +51,11 @@ let _rZone;
 
 const ReportType = {Sort : 0, Zone: 1, Select: 2}; //enum?
 class Report {
-  constructor(i, j, type = ReportType.Sort) {
-    Object.assign(this, {_i: i, _j: j, _type: type});
+  constructor(type, ...coords) {
+    Object.assign(this, {_coords: coords, _type: type});
   }
 
-  get I() { return this._i };
-  get J() { return this._j };
+  get Coords() { return [...this._coords]; };
   get Type() { return this._type; }
 }
 
@@ -107,29 +106,23 @@ const NextStep = () => {
   if (r.Type == ReportType.Zone) {
     RemoveZones();
     _rZone = r;
-    addZone(_arrDiv[_rZone.I]);
-    addZone(_arrDiv[_rZone.J]);
-  }
-
-  if (r.Type == ReportType.Zone) {
+    _rZone.Coords.forEach(v => addZone(_arrDiv[v]))
     setTimeout(NextStep, waitTime);
     return;
   }
 
-  const { I:i, J:j } = r;
-  addActive(_arrDiv[i]);
-  addActive(_arrDiv[j]);
+  const coords = r.Coords;
+  coords.forEach(v => addActive(_arrDiv[v]));
 
   if(r.Type != ReportType.Sort) {
     setTimeout(NextStep, waitTime / 10);
     return;
   }
 
-  const updateZone = [];
-  if(i === _rZone.I) updateZone.push(i);
-  if(j === _rZone.J) updateZone.push(j);
+  const updateZone = coords.filter(v => _rZone.Coords.includes(v));
   updateZone.forEach(v => removeZone(_arrDiv[v]));
 
+  const [i, j] = coords;
   [_arrDiv[i], _arrDiv[j]] = [_arrDiv[j], _arrDiv[i]];
   [_arrDiv[i].style.top, _arrDiv[j].style.top] = [GetTop(i), GetTop(j)];
 
