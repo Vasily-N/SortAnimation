@@ -35,7 +35,7 @@ const _block = document.getElementById('block');
 const _btnSort = document.getElementById('sort');
 let _arrDiv;
 
-let arr;
+let _arr;
 const ARR_LENGTH = 30;
 
 const L_HEIGHT = 16; //todo: get from style
@@ -47,6 +47,7 @@ let animationTime = 1000; //todo: get from style
 let waitTime = 1000;
 
 let _reports;
+let _rZone;
 
 const ReportType = {Sort : 0, Zone: 1, Select: 2}; //enum?
 class Report {
@@ -73,58 +74,57 @@ const Start = () => {
   _arrDiv = [];
 
   for (let i = 0; i < ARR_LENGTH; i++) {
-      const val = Math.floor(Math.random() * ARR_LENGTH + 1);
-      _arr[i] = val;
-      const div = document.createElement('div');
-      div.classList.add('row');
-      div.innerHTML = val;
-      const style = { top: `${GetPosition(i)}px`, width: `${L_MULT * val}px`};
-      Object.assign(div.style, style);
-      _arrDiv[i] = div;
-      _block.appendChild(div);
+    const val = Math.floor(Math.random() * ARR_LENGTH + 1);
+    _arr[i] = val;
+    const div = document.createElement('div');
+    div.classList.add('row');
+    div.innerHTML = val;
+    const style = { top: `${GetPosition(i)}px`, width: `${L_MULT * val}px`};
+    Object.assign(div.style, style);
+    _arrDiv[i] = div;
+    _block.appendChild(div);
   }
 
   _btnSort.addEventListener('click', BtnSort);
 }
 
-let _rZone;
 const NextStep = () => {
-    const ResetStyles = () => {
-      _block.querySelectorAll('.zone').forEach(v => v.classList.remove('zone'));
-      _block.querySelectorAll('.active').forEach(v => v.classList.remove('active'));
-    }
+  const ResetStyles = () => {
+    _block.querySelectorAll('.zone').forEach(v => v.classList.remove('zone'));
+    _block.querySelectorAll('.active').forEach(v => v.classList.remove('active'));
+  }
 
-    ResetStyles();
-    if (_reports.length == 0) {
-      return; 
-    }
+  ResetStyles();
+  if (_reports.length == 0) {
+    return; 
+  }
 
-    const r = _reports.shift();
-    if (r.Type == ReportType.Zone) {
-      _rZone = r;
-    }
+  const r = _reports.shift();
+  if (r.Type == ReportType.Zone) {
+    _rZone = r;
+  }
 
-    _arrDiv[_rZone.I].classList.add('zone');
-    _arrDiv[_rZone.J].classList.add('zone');
+  _arrDiv[_rZone.I].classList.add('zone');
+  _arrDiv[_rZone.J].classList.add('zone');
 
-    if (r.Type == ReportType.Zone) {
-      setTimeout(NextStep, waitTime);
-      return;
-    }
+  if (r.Type == ReportType.Zone) {
+    setTimeout(NextStep, waitTime);
+    return;
+  }
 
-    if(_arrDiv[r.I]) _arrDiv[r.I].classList.add('active');
-    if(_arrDiv[r.J]) _arrDiv[r.J].classList.add('active');
+  if(_arrDiv[r.I]) _arrDiv[r.I].classList.add('active');
+  if(_arrDiv[r.J]) _arrDiv[r.J].classList.add('active');
 
-    if(r.Type != ReportType.Sort) {
-      setTimeout(NextStep, waitTime / 10);
-      return;
-    }
+  if(r.Type != ReportType.Sort) {
+    setTimeout(NextStep, waitTime / 10);
+    return;
+  }
 
-    _arrDiv[r.I].style.top = `${GetPosition(r.J)}px`;
-    _arrDiv[r.J].style.top = `${GetPosition(r.I)}px`;
-    [_arrDiv[r.I], _arrDiv[r.J]] = [_arrDiv[r.J], _arrDiv[r.I]];
+  _arrDiv[r.I].style.top = `${GetPosition(r.J)}px`;
+  _arrDiv[r.J].style.top = `${GetPosition(r.I)}px`;
+  [_arrDiv[r.I], _arrDiv[r.J]] = [_arrDiv[r.J], _arrDiv[r.I]];
 
-    setTimeout(NextStep, animationTime + waitTime);
+  setTimeout(NextStep, animationTime + waitTime);
 }
 
 Start();
