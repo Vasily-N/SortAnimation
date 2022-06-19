@@ -103,6 +103,7 @@ const NextStep = () => {
 
   removeActives();
   if (_reports.length == 0) {
+    removeComparators();
     removeZones();
     return; 
   }
