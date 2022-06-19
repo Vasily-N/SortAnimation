@@ -88,24 +88,28 @@ const Start = () => {
   _btnSort.addEventListener('click', BtnSort);
 }
 
-const NextStep = () => {
-  const ResetStyles = () => {
-    _block.querySelectorAll('.zone').forEach(v => v.classList.remove('zone'));
-    _block.querySelectorAll('.active').forEach(v => v.classList.remove('active'));
-  }
+const removeZone = v => v.classList.remove('zone');
+const addZone = v => v.classList.add('zone');
+const removeActive = v => v.classList.remove('active');
+const addActive = v => v.classList.add('active');
 
-  ResetStyles();
+const NextStep = () => {
+  const RemoveActive = () => _block.querySelectorAll('.active').forEach(removeActive);
+  const RemoveZones = () => _block.querySelectorAll('.zone').forEach(removeZone);
+
+  RemoveActive();
   if (_reports.length == 0) {
+    RemoveZones();
     return; 
   }
 
   const r = _reports.shift();
   if (r.Type == ReportType.Zone) {
+    RemoveZones();
     _rZone = r;
+    addZone(_arrDiv[_rZone.I]);
+    addZone(_arrDiv[_rZone.J]);
   }
-
-  _arrDiv[_rZone.I].classList.add('zone');
-  _arrDiv[_rZone.J].classList.add('zone');
 
   if (r.Type == ReportType.Zone) {
     setTimeout(NextStep, waitTime);
@@ -113,16 +117,23 @@ const NextStep = () => {
   }
 
   const { I:i, J:j } = r;
-  _arrDiv[i].classList.add('active');
-  _arrDiv[j].classList.add('active');
+  addActive(_arrDiv[i]);
+  addActive(_arrDiv[j]);
 
   if(r.Type != ReportType.Sort) {
     setTimeout(NextStep, waitTime / 10);
     return;
   }
 
+  const updateZone = [];
+  if(i === _rZone.I) updateZone.push(i);
+  if(j === _rZone.J) updateZone.push(j);
+  updateZone.forEach(v => removeZone(_arrDiv[v]));
+
   [_arrDiv[i], _arrDiv[j]] = [_arrDiv[j], _arrDiv[i]];
   [_arrDiv[i].style.top, _arrDiv[j].style.top] = [GetTop(i), GetTop(j)];
+
+  updateZone.forEach(v => addZone(_arrDiv[v]));
 
   setTimeout(NextStep, animationTime + waitTime);
 }
