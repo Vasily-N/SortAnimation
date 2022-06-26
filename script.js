@@ -43,8 +43,9 @@ const L_Y_INTERVAL = 4;
 const L_MULT = 20;
 
 //todo: from UI
-let animationTime = 1000; //todo: get from style
-let waitTime = 1000;
+let animationTime = 800; //todo: get from style
+let selectTime = 150;
+let waitTime = 400;
 
 let _reports;
 let _rZone;
@@ -114,7 +115,7 @@ const NextStep = () => {
     removeZones();
     _rZone = r;
     _rZone.Coords.forEach(v => addZone(_arrDiv[v]))
-    setTimeout(NextStep, waitTime);
+    setTimeout(NextStep, animationTime);
     return;
   }
 
@@ -122,7 +123,7 @@ const NextStep = () => {
   coords.forEach(v => addActive(_arrDiv[v]));
 
   if(r.Type != ReportType.Sort) {
-    setTimeout(NextStep, waitTime / 10);
+    setTimeout(NextStep, selectTime);
     return;
   }
 
