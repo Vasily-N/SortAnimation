@@ -37,7 +37,6 @@ const _btnSort = document.getElementById('sort');
 let _arrDiv;
 
 let _arr;
-const ARR_LENGTH = 30;
 
 const L_HEIGHT = 16; //todo: get from style
 const L_Y_INTERVAL = 4;
@@ -69,22 +68,17 @@ const BtnSort = () => {
 
 const GetTop = i => `${i * (L_HEIGHT + L_Y_INTERVAL)}px`;
 
-const Start = () => {
-  _arr = [];
-  _arrDiv = [];
-
-  for (let i = 0; i < ARR_LENGTH; i++) {
-    const val = Math.floor(Math.random() * ARR_LENGTH + 1);
-    _arr[i] = val;
+const GenerateNewArray = arrLength => {
+  _block.innerHTML = "";
+  _arr = Array.from({ length: arrLength }).map(_ => Math.floor(Math.random() * arrLength + 1));
+  _arrDiv = _arr.map((val, i) => {
     const div = document.createElement('div');
     div.classList.add('row');
     div.innerHTML = val;
-    const style = { top: GetTop(i), width: `${L_MULT * val}px`};
-    Object.assign(div.style, style);
-    _arrDiv[i] = div;
-    _block.appendChild(div);
-  }
-
+    Object.assign(div.style, { top: GetTop(i), width: `${L_MULT * val}px`});
+    return div;
+  });
+  _arrDiv.forEach(div => _block.appendChild(div));
   _btnSort.addEventListener('click', BtnSort);
 }
 
@@ -144,4 +138,5 @@ const NextStep = () => {
   setTimeout(NextStep, animationTime + waitTime);
 }
 
-Start();
+const DEFAULT_ARR_LENGTH = 30;
+GenerateNewArray(DEFAULT_ARR_LENGTH);
